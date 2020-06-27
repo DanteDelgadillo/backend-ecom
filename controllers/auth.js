@@ -30,8 +30,8 @@ exports.signin = (req, res) => {
         }
         // if user is found
         if (!user.authenticate(password)) {
-            return res.status(401).jason({
-                error: 'Email and password dont match.'
+            return res.status(400).json({
+                err: 'Email and password dont match.'
             })
         }
 
