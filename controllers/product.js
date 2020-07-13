@@ -5,16 +5,18 @@ const Product = require("../models/product");
 const { errorHandler } = require('../helpers/dbErrorHandler')
 
 exports.productById = (req, res, next, id) => {
-    Product.findById(id).exec((err, product) => {
-        if (err || !product) {
-            return res.status(400).json({
-                error: "Product not found"
-            })
-        }
-        console.log(req.product)
-        req.product = product
-        next();
-    })
+    Product.findById(id)
+        .populate("category")
+        .exec((err, product) => {
+            if (err || !product) {
+                return res.status(400).json({
+                    error: "Product not found"
+                })
+            }
+            console.log(req.product)
+            req.product = product
+            next();
+        })
 
 }
 
@@ -248,25 +250,6 @@ exports.photo = (req, res, next) => {
     next();
 }
 
-// exports.listSearch = (req, res) => {
-//     const query = {}
-//     if (req.query.search) {
-//         query.name = { $reqex: req.query.search, $options: "i" }
-//         if (req.query.category && req.query.category != "All") {
-//             query.category = req.query.category
-
-//             Product.find(query, (err, products) => {
-//                 if (err) {
-//                     return res.status(400).json({
-//                         error: errorHandler(err)
-//                     })
-//                 }
-//                 res.json(products)
-//             }).select("-photo")
-//         }
-//     }
-
-// }
 
 exports.listSearch = (req, res) => {
     // create query object to hold search value and category value
